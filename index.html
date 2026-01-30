@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人主页 | Personal Page</title>
+    <!-- 引入图标库 (FontAwesome) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 引入谷歌字体 (Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- 全局重置 --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            height: 100vh;
+            width: 100%;
+            overflow: hidden; /* 防止滚动 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #ffffff;
+        }
+
+        /* --- 背景图区域 (关键修改点) --- */
+        .background-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            /* 👇👇👇 在这里替换您的图片链接 👇👇👇 */
+            background-image: url('https://images.unsplash.com/photo-1470770841072-f978cf4d019e?q=80&w=2070&auto=format&fit=crop'); 
+            /* 👆👆👆 替换上面 URL 即可 */
+            
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            
+            /* 添加一个深色遮罩，保证文字清晰度 */
+            &::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.3); /* 0.3 控制背景变暗程度 */
+            }
+        }
+
+        /* --- 毛玻璃卡片主体 --- */
+        .glass-card {
+            position: relative;
+            width: 90%;
+            max-width: 420px;
+            padding: 3rem 2rem;
+            text-align: center;
+            
+            /* 毛玻璃核心代码 */
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            
+            /* 动画初始状态 */
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        /* --- 头像 --- */
+        .avatar {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1.5rem;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .avatar:hover {
+            transform: scale(1.05) rotate(5deg);
+        }
+
+        /* --- 文本内容 --- */
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .bio {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        /* --- 链接列表 --- */
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .link-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-weight: 400;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .link-item i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+
+        .link-item:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        /* --- 底部社交图标行 --- */
+        .social-row {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .social-icon {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.3rem;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .social-icon:hover {
+            color: #fff;
+            transform: scale(1.2);
+        }
+
+        /* --- 版权信息 --- */
+        .footer {
+            margin-top: 2rem;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* --- 动画定义 --- */
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- 移动端适配 --- */
+        @media (max-width: 480px) {
+            .glass-card {
+                width: 85%;
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 背景层 -->
+    <div class="background-layer"></div>
+
+    <!-- 主卡片 -->
+    <main class="glass-card">
+        <!-- 1. 头像区域 (请替换 src 图片链接) -->
+        <div class="avatar">
+            <img src="https://tuchuang.pro/uploads/20260128/5d8b89920d3ce22738471b835bf1d740.jpg" alt="Avatar">
+        </div>
+
+        <!-- 2. 姓名与简介 -->
+        <h1>Keanu</h1>
+        <p class="bio">
+            运维工程师 & 汉堡鉴赏家。<br>
+            热爱极简主义，探索数字与生活的平衡。
+        </p>
+
+        <!-- 3. 按钮链接组 -->
+        <div class="links">
+            <a href="https://weibo.com/p/10080817c0fee819b9c79696a382f9634dbd87/super_index" class="link-item" target="_blank">
+                <i class="fas fa-blog"></i> 个人博客
+            </a>
+            <a href="#" class="link-item" target="_blank">
+                <i class="fab fa-github"></i> GitHub 项目
+            </a>
+            <a href="#" class="link-item" target="_blank">
+                <i class="fas fa-envelope"></i> 发送邮件
+            </a>
+        </div>
+
+        <!-- 4. 底部社交图标 (可选) -->
+        <div class="social-row">
+            <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+            <a href="https://tuchuang.pro/uploads/20260128/9b75fe09866f0aeb2b35dbc9739b7ee0.jpg" class="social-icon"><i class="fab fa-weixin"></i></a>
+        </div>
+
+        <!-- 5. 页脚 -->
+        <div class="footer">
+            &copy; 2026 Keanu Design. All Rights Reserved.
+        </div>
+    </main>
+
+</body>
+</html>
